@@ -1,5 +1,4 @@
-
-    body {
+body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
@@ -55,6 +54,21 @@
       margin-bottom: 20px;
     }
 
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+
+    .form-col {
+      flex: 0 0 50%;
+      max-width: 50%;
+      padding-right: 15px;
+      padding-left: 15px;
+      box-sizing: border-box;
+    }
+
     .form-group {
       margin-bottom: 15px;
     }
@@ -75,42 +89,42 @@
 
     .lista-transacciones {
       margin-top: 20px;
+      overflow-x: auto;
     }
 
-    .transaccion {
-      background: white;
-      border-left: 4px solid #007BFF;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
 
-    .transaccion.ingreso {
-      border-left-color: #28a745;
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
     }
 
-    .transaccion.egreso {
-      border-left-color: #dc3545;
+    th {
+      background-color: #007BFF;
+      color: white;
     }
 
-    .transaccion-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-weight: bold;
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
     }
 
-    .monto {
-      font-weight: bold;
+    tr:hover {
+      background-color: #e9e9e9;
     }
 
-    .monto.positivo {
-      color: #28a745;
+    .btn-eliminar {
+      background-color: #dc3545;
+      padding: 5px 10px;
+      font-size: 14px;
     }
 
-    .monto.negativo {
-      color: #dc3545;
+    .btn-eliminar:hover {
+      background-color: #c82333;
     }
 
     .resumen {
@@ -128,6 +142,7 @@
       margin-top: 15px;
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .acciones button {
@@ -138,10 +153,40 @@
       background-color: #28a745;
     }
 
+    .btn-success:hover {
+      background-color: #218838;
+    }
+
     .btn-danger {
       background-color: #dc3545;
     }
 
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
     .btn-secondary {
       background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .monto-positivo {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .monto-negativo {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .reporte-container {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
