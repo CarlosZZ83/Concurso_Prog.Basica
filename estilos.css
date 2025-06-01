@@ -1,0 +1,147 @@
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    header {
+      background-color: #007BFF;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    main {
+      background-color: white;
+      padding: 2rem;
+      margin: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      color: #666;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Estilos para el sistema contable */
+    .contabilidad-container {
+      margin-top: 2rem;
+    }
+
+    .formulario-contable {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .lista-transacciones {
+      margin-top: 20px;
+    }
+
+    .transaccion {
+      background: white;
+      border-left: 4px solid #007BFF;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .transaccion.ingreso {
+      border-left-color: #28a745;
+    }
+
+    .transaccion.egreso {
+      border-left-color: #dc3545;
+    }
+
+    .transaccion-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .monto {
+      font-weight: bold;
+    }
+
+    .monto.positivo {
+      color: #28a745;
+    }
+
+    .monto.negativo {
+      color: #dc3545;
+    }
+
+    .resumen {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e9ecef;
+      border-radius: 5px;
+    }
+
+    .resumen h3 {
+      margin-top: 0;
+    }
+
+    .acciones {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .acciones button {
+      margin-top: 0;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }

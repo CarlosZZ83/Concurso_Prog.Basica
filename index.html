@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="estilos.css">
+  <title>Proyecto Concurso Nivel Básico</title>
+ 
+</head>
+<body>
+
+  <header>
+    <h1>Uisrael 2ff</h1>
+    <h2>Sistema de Gestión Contable</h2>
+  </header>
+
+  <main>
+    <div id="inicio">
+      <h2>Bienvenidos al Sistema de Gestión Contable "Libro Diario"</h2>
+      <p>Objetivo: Desarrollar una base de datos que permita registrar, organizar y consultar de manera eficiente todas las operaciones contables diarias, facilitando la generación automatizada del Libro Diario conforme a los principios de la contabilidad generalmente aceptados.</p>
+      <button id="btnIngresarSistema">Ingresar al Sistema</button>
+    </div>
+
+    <div id="sistema-contable" style="display: none;">
+      <div class="contabilidad-container">
+        <h2>Libro Diario Digital</h2>
+        
+        <div class="formulario-contable">
+          <h3>Nueva Transacción</h3>
+          <form id="formTransaccion">
+            <div class="form-group">
+              <label for="descripcion">Descripción:</label>
+              <input type="text" id="descripcion" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="monto">Monto:</label>
+              <input type="number" id="monto" step="0.01" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="tipo">Tipo:</label>
+              <select id="tipo" required>
+                <option value="ingreso">Ingreso</option>
+                <option value="egreso">Egreso</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="fecha">Fecha:</label>
+              <input type="date" id="fecha" required>
+            </div>
+            
+            <div class="acciones">
+              <button type="submit" class="btn-success">Registrar Transacción</button>
+              <button type="button" id="btnVolverInicio" class="btn-secondary">Volver al Inicio</button>
+            </div>
+          </form>
+        </div>
+        
+        <div class="lista-transacciones">
+          <h3>Transacciones Registradas</h3>
+          <div id="transaccionesContainer"></div>
+          
+          <div class="resumen">
+            <h3>Resumen Contable</h3>
+            <p>Total Ingresos: <span id="totalIngresos" class="monto positivo">$0.00</span></p>
+            <p>Total Egresos: <span id="totalEgresos" class="monto negativo">$0.00</span></p>
+            <p>Balance General: <span id="balance" class="monto">$0.00</span></p>
+          </div>
+          
+          <div class="acciones">
+            <button id="btnExportar" class="btn-success">Exportar Datos</button>
+            <button id="btnLimpiar" class="btn-danger">Limpiar Registros</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Elementos de la interfaz
+      const inicioSection = document.getElementById('inicio');
+      const sistemaContableSection = document.getElementById('sistema-contable');
+      const btnIngresarSistema = document.getElementById('btnIngresarSistema');
+      const btnVolverInicio = document.getElementById('btnVolverInicio');
+      const form = document.getElementById('formTransaccion');
+      const transaccionesContainer = document.getElementById('transaccionesContainer');
+      const totalIngresosElement = document.getElementById('totalIngresos');
+      const totalEgresosElement = document.getElementById('totalEgresos');
+      const balanceElement = document.getElementById('balance');
+      const btnExportar = document.getElementById('btnExportar');
+      const btnLimpiar = document.getElementById('btnLimpiar');
+      
+      // Datos
+      let transacciones = JSON.parse(localStorage.getItem('transacciones')) || [];
+      let contadorTransacciones = transacciones.length > 0 ? Math.max(...transacciones.map(t => t.id)) + 1 : 1;
+      
+      // Event Listeners
+      btnIngresarSistema.addEventListener('click', function() {
+        inicioSection.style.display = 'none';
+        sistemaContableSection.style.display = 'block';
+        cargarTransacciones();
+      });
+      
+      btnVolverInicio.addEventListener('click', function() {
+        sistemaContableSection.style.display = 'none';
+        inicioSection.style.display = 'block';
+      });
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        registrarTransaccion();
+      });
+      
+      btnExportar.addEventListener('click', exportarDatos);
+      btnLimpiar.addEventListener('click', limpiarRegistros);
+      
+      // Funciones
+      function cargarTransacciones() {
+        renderizarTransacciones();
+        actualizarResumen();
+      }
+      
+      function registrarTransaccion() {
+        const descripcion = document.getElementById('descripcion').value;
+        const monto = parseFloat(document.getElementById('monto').value);
+        const tipo = document.getElementById('tipo').value;
+        const fecha = document.getElementById('fecha').value;
+        
+        const transaccion = {
+          id: contadorTransacciones++,
+          descripcion,
+          monto: tipo === 'ingreso' ? monto : -monto,
+          tipo,
+          fecha
+        };
+        
+        transacciones.push(transaccion);
+        guardarTransacciones();
+        renderizarTransacciones();
+        actualizarResumen();
+        
+        form.reset();
+      }
+      
+      function guardarTransacciones() {
+        localStorage.setItem('transacciones', JSON.stringify(transacciones));
+      }
+      
+      function renderizarTransacciones() {
+        transaccionesContainer.innerHTML = '';
+        
+        if (transacciones.length === 0) {
+          transaccionesContainer.innerHTML = '<p>No hay transacciones registradas.</p>';
+          return;
+        }
+        
+        
+        const transaccionesOrdenadas = [...transacciones].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        
+        transaccionesOrdenadas.forEach(transaccion => {
+          const transaccionElement = document.createElement('div');
+          transaccionElement.className = `transaccion ${transaccion.tipo}`;
+          
+          const esPositivo = transaccion.monto >= 0;
+          const claseMonto = esPositivo ? 'positivo' : 'negativo';
+          const signoMonto = esPositivo ? '+' : '';
+          
+          transaccionElement.innerHTML = `
+            <div class="transaccion-header">
+              <span>Transacción #${transaccion.id}</span>
+              <span class="monto ${claseMonto}">${signoMonto}$${Math.abs(transaccion.monto).toFixed(2)}</span>
+            </div>
+            <p><strong>Descripción:</strong> ${transaccion.descripcion}</p>
+            <p><strong>Tipo:</strong> ${transaccion.tipo === 'ingreso' ? 'Ingreso' : 'Egreso'}</p>
+            <p><strong>Fecha:</strong> ${formatearFecha(transaccion.fecha)}</p>
+          `;
+          
+          transaccionesContainer.appendChild(transaccionElement);
+        });
+      }
+      
+      function actualizarResumen() {
+        const totalIngresos = transacciones
+          .filter(t => t.tipo === 'ingreso')
+          .reduce((sum, t) => sum + Math.abs(t.monto), 0);
+        
+        const totalEgresos = transacciones
+          .filter(t => t.tipo === 'egreso')
+          .reduce((sum, t) => sum + Math.abs(t.monto), 0);
+        
+        const balance = totalIngresos - totalEgresos;
+        
+        totalIngresosElement.textContent = `$${totalIngresos.toFixed(2)}`;
+        totalEgresosElement.textContent = `$${totalEgresos.toFixed(2)}`;
+        
+        balanceElement.textContent = `$${balance.toFixed(2)}`;
+        balanceElement.className = 'monto ' + (balance >= 0 ? 'positivo' : 'negativo');
+      }
+      
+      function formatearFecha(fechaString) {
+        const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(fechaString).toLocaleDateString('es-ES', opciones);
+      }
+      
+      function exportarDatos() {
+        const dataStr = JSON.stringify(transacciones, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `libro-diario-${new Date().toISOString().slice(0,10)}.json`;
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+      }
+      
+      function limpiarRegistros() {
+        if (confirm('¿Está seguro que desea eliminar todos los registros? Esta acción no se puede deshacer.')) {
+          transacciones = [];
+          contadorTransacciones = 1;
+          localStorage.removeItem('transacciones');
+          renderizarTransacciones();
+          actualizarResumen();
+        }
+      }
+      
+      
+      document.getElementById('fecha').valueAsDate = new Date();
+    });
+  </script>
+</body>
+</html>
+
+
+
+</main>
+
+
+  <footer>
+    &copy; 2025 - Todos los derechos reservados
+  </footer>
+
+</body>
+</html>
